@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Assets</title>
+        <script src="http://d3js.org/d3.v4.min.js"></script>
+        <style>
+        .tick line { opacity: 0.1 }
+        .line { fill: none }
+        #overlay { fill: none; pointer-events: all }
+        #tracker line { stroke: black }
+        .hidden#tracker { display: none }
+        #tracker text { font-size: 8pt }
+        #tracker text.hidden { display: none }
+        #tracker .balance { text-anchor: end; dominant-baseline: text-before-edge }
+        #tracker #total { text-anchor: end; dominant-baseline: text-after-edge }
+        </style>
+    </head>
+    <body>
+        <svg width="940" height="600"></svg>
+        <script>
+        var keys = [
+            {%- for key in keys %}
+            "{{ key }}"{% if not loop.last %},{% endif %}
+            {%- endfor %}
+        ];
+        var data = [
+            {%- for date, daybalances in balances %}
+            {
+                date: new Date("{{date}}")
+                {%- for key in keys %},
+                "{{key}}": {{daybalances[key] | default('0')}}
+                {%- endfor %}
+            }{% if not loop.last %},{% endif %}
+            {%- endfor %}
+        ];
+        var maxy = d3.max(data, function(d) {
+            return d3.sum(keys, function(k) { return d[k]; });
+        });
+
+        var svg = d3.select("svg"),
+            margin = {top: 10, right: 70, bottom: 20, left: 10},
+            width  = svg.attr("width")  - margin.left - margin.right,
+            height = svg.attr("height") - margin.top - margin.bottom,
+            formatDate = d3.timeFormat("%Y-%m-%d"),
+            formatMoney = d3.format(",.2f"),
+            bisectDate = d3.bisector(function(d) { return d.date; }).left;
+
+        var x = d3.scaleTime()
+                  .domain(d3.extent(data, function(d) { return d.date; }))
+                  .range([0, width]),
+            y = d3.scaleLinear()
+                  .domain([0, maxy])
+                  .range([height, 0]),
+            strokeColor = d3.scaleOrdinal(d3.schemeCategory10)
+                            .domain(keys);
+
+        var stack = d3.stack()
+                      .keys(keys)
+                      .order(d3.stackOrderReverse);
+
+        var stacked = stack(data);
+
+        var area = d3.area()
+                     .curve(d3.curveMonotoneX)
+                     .x(function(d) { return x(d.data.date); })
+                     .y0(function(d) { return y(d[0]); })
+                     .y1(function(d) { return y(d[1]); });
+
+        var line = d3.line()
+                     .curve(d3.curveMonotoneX)
+                     .x(function(d) { return x(d.data.date); })
+                     .y(function(d) { return y(d[1]); });
+
+        var g = svg.append("g")
+                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var layer = g.selectAll(".layer")
+                     .data(stacked)
+                     .enter().append("g")
+                     .attr("class", "layer");
+
+        layer.append("path")
+             .attr("class", "area")
+             .style("fill", function(d) {
+                 var c = d3.color(strokeColor(d.key)).rgb();
+                 return d3.rgb(c.r, c.g, c.b, 0.1);
+             })
+             .attr("d", area);
+
+        layer.append("path")
+             .attr("class", "line")
+             .style("stroke", function(d) { return strokeColor(d.key); })
+             .attr("d", line);
+
+        g.append("g")
+         .attr("class", "axis axis--x")
+         .attr("transform", "translate(0," + height + ")")
+         .call(d3.axisBottom(x)
+                 .ticks(d3.timeMonth.every(1))
+                 .tickSizeInner(-height)
+                 .tickSizeOuter(0)
+                 .tickPadding(10));
+
+        g.append("g")
+         .attr("class", "axis axis--y")
+         .call(d3.axisRight(y)
+                 .tickSizeInner(width)
+                 .tickSizeOuter(0));
+
+        var tracker = g.append("g")
+                       .attr("id", "tracker")
+                       .attr("class", "hidden");
+
+        var trackerLine = tracker.append("line");
+
+        tracker.selectAll("circle")
+               .data(keys)
+               .enter().append("circle")
+               .attr("r", 3)
+               .style("fill", function(k) { return strokeColor(k); });
+        tracker.selectAll(".balance")
+               .data(keys)
+               .enter().append("text")
+               .attr("class", "balance")
+               .style("fill", function(k) { return strokeColor(k); });
+        var total = tracker.append("text")
+                           .attr("id", "total");
+
+        g.append("rect")
+         .attr("id", "overlay")
+         .attr("width", width)
+         .attr("height", height)
+         .on("mouseover", function() { tracker.classed("hidden", false); })
+         .on("mouseout",  function() { tracker.classed("hidden", true); })
+         .on("mousemove", function() {
+             var x0 = x.invert(d3.mouse(this)[0]),
+                 i = bisectDate(data, x0, 1),
+                 d0 = data[i - 1],
+                 d1 = data[i],
+                 d  = x0 - d0.date > d1.date - x0 ? d1 : d0,
+                 ii = x0 - d0.date > d1.date - x0 ? i : i - 1,
+                 sumy = d3.sum(keys, function(k) { return d[k]; });
+             tracker.attr("transform", "translate(" + x(d.date) + ",0)");
+             trackerLine.attr("y1", y(0))
+                        .attr("y2", y(maxy));
+             tracker.selectAll("circle")
+                    .data(stacked)
+                    .attr("cy", function(series) { return y(series[ii][1]); });
+             tracker.selectAll(".balance")
+                    .data(stacked)
+                    .attr("y", function(series) { return y(series[ii][1]); })
+                    .classed("hidden", function(series) {
+                        return 10 > Math.abs(y(series[ii][1]) - y(series[ii][0]));
+                    })
+                    .text(function(series) {
+                        return series.key + " · " + formatMoney(d[series.key]);
+                    });
+             total.attr("y", y(sumy))
+                  .text(formatDate(d.date) + " · " + formatMoney(sumy));
+         })
+        </script>
+    </body>
+</html>

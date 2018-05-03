@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Expenses</title>
+        <script src="http://d3js.org/d3.v4.min.js"></script>
+        <style>
+        .tick line { opacity: 0.1 }
+        .line { fill: none }
+        #overlay { fill: none; pointer-events: all }
+        #tracker line { stroke: black }
+        .hidden#tracker { display: none }
+        #tracker text { font-size: 8pt }
+        #tracker text.hidden { display: none }
+        #tracker .balance { text-anchor: end; dominant-baseline: text-before-edge }
+        #tracker #total { text-anchor: end; dominant-baseline: text-after-edge }
+        </style>
+    </head>
+    <body>
+        <svg width="940" height="600"></svg>
+        <script>
+        var keys = [
+            {%- for key in keys %}
+            "{{ key }}"{% if not loop.last %},{% endif %}
+            {%- endfor %}
+        ];
+        var data = [
+            {%- for month, monthbalances in balances %}
+            {
+                month: "{{month}}"
+                {%- for key in keys %},
+                "{{key}}": {{monthbalances[key] | default('0')}}
+                {%- endfor %}
+            }{% if not loop.last %},{% endif %}
+            {%- endfor %}
+        ];
+        var maxy = d3.max(data, function(d) {
+            return d3.sum(keys, function(k) { return d[k]; });
+        });
+
+        var svg = d3.select("svg"),
+            margin = {top: 10, right: 70, bottom: 20, left: 10},
+            width  = svg.attr("width")  - margin.left - margin.right,
+            height = svg.attr("height") - margin.top - margin.bottom,
+            formatMoney = d3.format(",.2f"),
+            bisectDate = d3.bisector(function(d) { return d.date; }).left;
+
+        var x = d3.scaleBand()
+                  .domain(data.map(function(d) { return d.month; }))
+                  .range([0, width])
+                  .padding(0.1),
+            y = d3.scaleLinear()
+                  .domain([0, maxy])
+                  .range([height, 0]),
+            strokeColor = d3.scaleOrdinal(d3.schemeCategory20)
+                            .domain(keys);
+
+        var stack = d3.stack()
+                      .keys(keys)
+                      .order(d3.stackOrderDescending);
+
+        var stacked = stack(data);
+
+        var g = svg.append("g")
+                   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var series = g.selectAll(".series")
+                      .data(stacked)
+                      .enter().append("g")
+                      .attr("fill", function(d) {
+                          return strokeColor(d.key);
+                      });
+
+        var rect = series.selectAll("rect")
+                         .data(function(d) { return d; })
+                         .enter().append("rect")
+                         .attr("x", function(d, i) { return x(x.domain()[i]); })
+                         .attr("y", function(d) { return y(d[1]); })
+                         .attr("width", x.bandwidth())
+                         .attr("height", function(d) { return y(d[0]) - y(d[1]); });
+
+        g.append("g")
+         .attr("class", "axis axis--x")
+         .attr("transform", "translate(0," + height + ")")
+         .call(d3.axisBottom(x)
+                 .ticks(d3.timeMonth.every(1))
+                 .tickSizeInner(-height)
+                 .tickSizeOuter(0)
+                 .tickPadding(10));
+
+        g.append("g")
+         .attr("class", "axis axis--y")
+         .call(d3.axisRight(y)
+                 .tickSizeInner(width)
+                 .tickSizeOuter(0));
+
+        var tracker = g.append("g")
+                       .attr("id", "tracker")
+                       .attr("class", "hidden");
+
+        var trackerLine = tracker.append("line");
+
+        tracker.selectAll("circle")
+               .data(stacked)
+               .enter().append("circle")
+               .attr("r", 3)
+               .style("fill", function(d) { return strokeColor(d.key); });
+        tracker.selectAll(".balance")
+               .data(stacked)
+               .enter().append("text")
+               .attr("class", "balance");
+        var total = tracker.append("text")
+                           .attr("id", "total");
+
+        g.append("rect")
+         .attr("id", "overlay")
+         .attr("width", width)
+         .attr("height", height)
+         .on("mouseover", function() { tracker.classed("hidden", false); })
+         .on("mouseout",  function() { tracker.classed("hidden", true); })
+         .on("mousemove", function() {
+             var i = Math.min(x.domain().length - 1,
+                              Math.floor(
+                                  (d3.mouse(this)[0] - x.step() * x.paddingOuter())
+                                  / x.step())),
+                 d = data[i];
+             var sumy = d3.sum(keys, function(k) { return d[k]; });
+             tracker.attr("transform", "translate(" + (x(d.month) + x.bandwidth()) + ",0)");
+             trackerLine.attr("y1", y(0))
+                        .attr("y2", y(maxy));
+             tracker.selectAll("circle")
+                    .data(stacked)
+                    .attr("cy", function(series) { return y(series[i][1]); });
+             tracker.selectAll(".balance")
+                    .data(stacked)
+                    .attr("y", function(series) { return y(series[i][1]); })
+                    .classed("hidden", function(series) {
+                        return 10 > Math.abs(y(series[i][1]) - y(series[i][0]));
+                    })
+                    .text(function(series) {
+                        return series.key + " · " + formatMoney(d[series.key]);
+                    });
+             total.attr("y", y(sumy))
+                  .text(d.month + " · " + formatMoney(sumy));
+         })
+        </script>
+    </body>
+</html>
