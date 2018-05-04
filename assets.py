@@ -21,14 +21,20 @@ def u8(x):
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument('--file', '-f', metavar='FILENAME',
-                        help='ledger file')
+                        required=True, help='ledger file')
     parser.add_argument('--output', '-o', metavar='FILENAME',
                         help='output file')
     parser.add_argument('--commodity',
                         help='graph only this commodity')
-    parser.add_argument('query', nargs=REMAINDER, default='^assets',
+    parser.add_argument('query', nargs=REMAINDER,
                         help='base query to graph')
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if args.query and args.query[0] == '--':
+        del args.query[0]
+    args.query = ' '.join(['register'] + (args.query or ['^Assets']))
+
+    return args
 
 
 @contextmanager
@@ -52,8 +58,7 @@ def main():
 
     balances_by_date = dict()  # {date: {account: balance}}
     balances = dict()  # {account: balance}
-    for post in journal.query('register %s' % ' '.join(
-            arg for arg in args.query if arg != '--')):
+    for post in journal.query(args.query):
         if (args.commodity
                 and post.amount.commodity.symbol != args.commodity):
             continue
