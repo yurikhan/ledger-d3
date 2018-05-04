@@ -29,3 +29,15 @@ $ sudo apt-get install python-ledger python-jinja2
 ```
 
 Windows and Mac users please figure out the environment for yourselves.
+
+# Examples
+
+You can find an example ledger file in `examples`.
+
+## Assets
+
+![](examples/assets.png)
+
+## Expenses
+
+![](examples/expenses.png)

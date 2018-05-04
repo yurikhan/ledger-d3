@@ -1,0 +1,352 @@
+
+; 2017
+
+2017-01-01 * Opening balance
+    Assets:Bank                 40000.00 EUR
+    Equity:Opening Balance
+
+2017-01-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-01-28 * Salary
+    Assets:Bank                  1800.00 EUR
+    Income:Salary               -1800.00 EUR
+
+2017-01-28 * Food
+    Expenses:Food                 200.00 EUR
+    Assets:Bank                  -200.00 EUR
+
+2017-02-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-02-20 * Food
+    Expenses:Food                 180.00 EUR
+    Assets:Bank                  -180.00 EUR
+
+2017-02-28 * Salary
+    Assets:Bank                  1800.00 EUR
+    Income:Salary               -1800.00 EUR
+
+2017-03-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-03-28 * Salary
+    Assets:Bank                  1800.00 EUR
+    Income:Salary               -1800.00 EUR
+
+2017-03-31 * Food
+    Expenses:Food                 230.00 EUR
+    Assets:Bank                  -230.00 EUR
+
+2017-04-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-04-15 * Food
+    Expenses:Food                 100.00 EUR
+    Assets:Bank                  -100.00 EUR
+
+2017-04-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+2017-04-28 * Salary
+    Assets:Bank                  1800.00 EUR
+    Income:Salary               -1800.00 EUR
+
+2017-04-30 * Food
+    Expenses:Food                 140.00 EUR
+    Assets:Bank                  -140.00 EUR
+
+2017-05-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-05-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+; Salary increase!
+2017-05-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2017-06-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-06-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+2017-06-23 * Food
+    Expenses:Food                 220.00 EUR
+    Assets:Bank                  -220.00 EUR
+
+2017-06-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2017-07-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-07-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+2017-07-23 * Food
+    Expenses:Food                 210.00 EUR
+    Assets:Bank                  -210.00 EUR
+
+2017-07-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2017-08-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-08-10 * Food
+    Expenses:Food                  90.00 EUR
+    Assets:Bank                   -90.00 EUR
+
+2017-08-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+2017-08-16 * Food
+    Expenses:Food                 120.00 EUR
+    Assets:Bank                  -120.00 EUR
+
+2017-08-28 * Food
+    Expenses:Food                  70.00 EUR
+    Assets:Bank                   -70.00 EUR
+
+2017-08-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2017-09-02 * Rent
+    Expenses:Rent                 800.00 EUR
+    Assets:Bank                  -800.00 EUR
+
+2017-09-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+2017-09-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2017-09-30 * Food
+    Expenses:Food                 240.00 EUR
+    Assets:Bank                  -240.00 EUR
+
+; Rent increase
+2017-10-02 * Rent
+    Expenses:Rent                 950.00 EUR
+    Assets:Bank                  -950.00 EUR
+
+2017-10-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+2017-10-20 * Food
+    Expenses:Food                 220.00 EUR
+    Assets:Bank                  -220.00 EUR
+
+2017-10-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2017-10-30 * Food
+    Expenses:Food                 190.00 EUR
+    Assets:Bank                  -190.00 EUR
+
+2017-11-02 * Rent
+    Expenses:Rent                 950.00 EUR
+    Assets:Bank                  -950.00 EUR
+
+2017-11-13 * Gym
+    Expenses:Gym                   40.00 EUR
+    Assets:Bank                   -40.00 EUR
+
+2017-11-15 * Gift from grandparents
+    Assets:Bank                 15000.00 EUR
+    Income:Salary              -15000.00 EUR
+
+2017-11-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2017-11-30 * Food
+    Expenses:Food                 185.00 EUR
+    Assets:Bank                  -185.00 EUR
+
+2017-12-02 * Rent
+    Expenses:Rent                 950.00 EUR
+    Assets:Bank                  -950.00 EUR
+
+2017-12-23 * Food
+    Expenses:Food                 250.00 EUR
+    Assets:Bank                  -250.00 EUR
+
+2017-12-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+; 2018
+
+2018-01-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-01-20 * Food
+    Expenses:Food                 190.00 EUR
+    Assets:Bank                  -190.00 EUR
+
+2018-01-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-02-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-02-16 * Gift from grandparents
+    Assets:Bank                  5000.00 EUR
+    Income:Salary               -5000.00 EUR
+
+2018-02-20 * Food
+    Expenses:Food                 200.00 EUR
+    Assets:Bank                  -200.00 EUR
+
+2018-02-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-03-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-03-20 * Food
+    Expenses:Food                 190.00 EUR
+    Assets:Bank                  -190.00 EUR
+
+2018-03-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-04-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-04-20 * Food
+    Expenses:Food                 180.00 EUR
+    Assets:Bank                  -180.00 EUR
+
+2018-04-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-05-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-05-20 * Food
+    Expenses:Food                 190.00 EUR
+    Assets:Bank                  -190.00 EUR
+
+2018-05-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-06-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-06-20 * Food
+    Expenses:Food                 190.00 EUR
+    Assets:Bank                  -190.00 EUR
+
+2018-06-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-07-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-07-20 * Food
+    Expenses:Food                 230.00 EUR
+    Assets:Bank                  -230.00 EUR
+
+2018-07-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-08-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-08-20 * Food
+    Expenses:Food                 200.00 EUR
+    Assets:Bank                  -200.00 EUR
+
+2018-08-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-09-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-09-20 * Food
+    Expenses:Food                 190.00 EUR
+    Assets:Bank                  -190.00 EUR
+
+2018-09-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-10-02 * Rent
+    Expenses:Rent                 980.00 EUR
+    Assets:Bank                  -980.00 EUR
+
+2018-10-20 * Food
+    Expenses:Food                 220.00 EUR
+    Assets:Bank                  -220.00 EUR
+
+2018-10-28 * Salary
+    Assets:Bank                  2000.00 EUR
+    Income:Salary               -2000.00 EUR
+
+2018-11-02 * Rent
+    Expenses:Rent                 990.00 EUR
+    Assets:Bank                  -990.00 EUR
+
+2018-11-20 * Food
+    Expenses:Food                 230.00 EUR
+    Assets:Bank                  -230.00 EUR
+
+; Salary increase!
+2018-11-28 * Salary
+    Assets:Bank                  2500.00 EUR
+    Income:Salary               -2500.00 EUR
+
+2018-12-02 * Rent
+    Expenses:Rent                 990.00 EUR
+    Assets:Bank                  -990.00 EUR
+
+2018-12-20 * Food
+    Expenses:Food                 235.00 EUR
+    Assets:Bank                  -235.00 EUR
+
+2018-12-28 * Salary
+    Assets:Bank                  2500.00 EUR
+    Income:Salary               -2500.00 EUR
+
