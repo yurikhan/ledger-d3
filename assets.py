@@ -28,6 +28,9 @@ def parse_args():
                         help='graph only this commodity')
     parser.add_argument('query', nargs=REMAINDER, default='^assets',
                         help='base query to graph')
+    if not parser.parse_args().file:
+        parser.print_help()
+        sys.exit(1)
     return parser.parse_args()
 
 

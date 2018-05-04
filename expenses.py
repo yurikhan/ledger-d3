@@ -27,6 +27,9 @@ def parse_args():
                         help='graph only this commodity')
     parser.add_argument('query', nargs=REMAINDER, default='^expenses',
                         help='query to graph')
+    if not parser.parse_args().file:
+        parser.print_help()
+        sys.exit(1)
     return parser.parse_args()
 
 
