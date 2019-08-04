@@ -24,8 +24,8 @@ def parse_args():
                         required=True, help='ledger file')
     parser.add_argument('--output', '-o', metavar='FILENAME',
                         help='output file')
-    parser.add_argument('--commodity',
-                        help='graph only this commodity')
+    parser.add_argument('--commodity', required=True,
+                        help='normalize all amounts to this commodity')
     parser.add_argument('query', nargs=REMAINDER,
                         help='base query to graph')
     args = parser.parse_args()
@@ -46,6 +46,14 @@ def file_or_std(arg, std):
         yield std
 
 
+def amount_sum(date, base_commodity, amounts):
+    result = None
+    for amount in amounts:
+        value = amount.value(base_commodity, date)
+        result = value if result is None else result + value
+    return result.to_double()
+
+
 def main():
     args = parse_args()
 
@@ -56,27 +64,40 @@ def main():
 
     journal = ledger.read_journal(args.file)
 
-    balances_by_date = dict()  # {date: {account: balance}}
-    balances = dict()  # {account: balance}
-    for post in journal.query(args.query):
-        if (args.commodity
-                and post.amount.commodity.symbol != args.commodity):
-            continue
-        account = u8(post.account.fullname())
+    balances_by_date = {}  # type: Dict[date, Dict[AccountName, Dict[CommodityName, float]]]
+    last_date = None
+    balances = {}  # type: Dict[AccountName, Dict[CommodityName, float]]
+    for post in sorted(journal.query(args.query),
+                       key=lambda p: p.xact.date):
         date = u8(post.xact.date)
+        account = u8(post.account.fullname())
+        commodity = u8(post.amount.commodity.symbol)
         amount = post.amount.to_double()
-        if date not in balances_by_date:
-            balances_by_date[date] = deepcopy(balances)
-        if account not in balances_by_date[date]:
-            balances_by_date[date][account] = 0
+
+        if date != last_date:
+            if last_date is not None:
+                balances_by_date[last_date] = deepcopy(balances)
+            last_date = date
         if account not in balances:
-            balances[account] = 0
-        balances_by_date[date][account] += amount
-        balances[account] += amount
+            balances[account] = {}  # type: Dict[CommodityName, float]
+        if commodity not in balances[account]:
+            balances[account][commodity] = 0
+        balances[account][commodity] += amount
+    balances_by_date[last_date] = deepcopy(balances)
+
+    base_commodity = ledger.commodities.find(args.commodity)
+    worth_by_date = {
+        date: {
+            account: amount_sum(ledger.parse_date(date), base_commodity,
+                (ledger.Amount('{:f}'.format(amount))
+                       .with_commodity(ledger.commodities.find(commodity))
+                 for commodity, amount in commodity_balances.iteritems()))
+            for account, commodity_balances in balances.iteritems()}
+        for date, balances in balances_by_date.iteritems()}
 
     with file_or_std(args.output, sys.stdout) as f:
         print(template.render(
-                balances=sorted(list(balances_by_date.items())),
+                balances=sorted(list(worth_by_date.items())),
                 keys=sorted(list(balances.keys()))).encode('utf-8'),
             file=f)
 
