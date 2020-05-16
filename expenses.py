@@ -1,6 +1,4 @@
-#!/usr/bin/python
-
-from __future__ import print_function
+#!/usr/bin/python3
 
 from argparse import ArgumentParser, REMAINDER
 from collections import defaultdict
@@ -11,10 +9,6 @@ import sys
 
 from jinja2 import Environment, FileSystemLoader
 import ledger
-
-
-def u8(x):
-    return str(x).decode('utf-8')
 
 
 def parse_args():
@@ -61,10 +55,10 @@ def main():
         if (args.commodity
                 and post.amount.commodity.symbol != args.commodity):
             continue
-        account = u8(post.account.fullname())
+        account = post.account.fullname()
         month = '%04d-%02d' % (
             post.xact.date.year, post.xact.date.month)
-        payee = u8(post.xact.payee)
+        payee = post.xact.payee
         amount = post.amount.to_double()
         accounts.add(account)
         if month not in balances_by_month:
@@ -76,7 +70,7 @@ def main():
     with file_or_std(args.output, sys.stdout) as f:
         print(template.render(
                 balances=sorted(list(balances_by_month.items())),
-                keys=sorted(list(accounts))).encode('utf-8'),
+                keys=sorted(list(accounts))),
             file=f)
 
 

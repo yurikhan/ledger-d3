@@ -1,6 +1,4 @@
-#!/usr/bin/python
-
-from __future__ import print_function
+#!/usr/bin/python3
 
 from argparse import ArgumentParser, REMAINDER
 from collections import defaultdict
@@ -12,10 +10,6 @@ import sys
 
 from jinja2 import Environment, FileSystemLoader
 import ledger
-
-
-def u8(x):
-    return str(x).decode('utf-8')
 
 
 def parse_args():
@@ -69,9 +63,9 @@ def main():
     balances = {}  # type: Dict[AccountName, Dict[CommodityName, float]]
     for post in sorted(journal.query(args.query),
                        key=lambda p: p.xact.date):
-        date = u8(post.xact.date)
-        account = u8(post.account.fullname())
-        commodity = u8(post.amount.commodity.symbol)
+        date = post.xact.date
+        account = post.account.fullname()
+        commodity = post.amount.commodity.symbol
         amount = post.amount.to_double()
 
         if date != last_date:
@@ -88,17 +82,17 @@ def main():
     base_commodity = ledger.commodities.find(args.commodity)
     worth_by_date = {
         date: {
-            account: amount_sum(ledger.parse_date(date), base_commodity,
+            account: amount_sum(date, base_commodity,
                 (ledger.Amount('{:f}'.format(amount))
                        .with_commodity(ledger.commodities.find(commodity))
-                 for commodity, amount in commodity_balances.iteritems()))
-            for account, commodity_balances in balances.iteritems()}
-        for date, balances in balances_by_date.iteritems()}
+                 for commodity, amount in commodity_balances.items()))
+            for account, commodity_balances in balances.items()}
+        for date, balances in balances_by_date.items()}
 
     with file_or_std(args.output, sys.stdout) as f:
         print(template.render(
                 balances=sorted(list(worth_by_date.items())),
-                keys=sorted(list(balances.keys()))).encode('utf-8'),
+                keys=sorted(list(balances.keys()))),
             file=f)
 
 

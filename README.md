@@ -24,11 +24,22 @@ to a date range excluding the opening balances.
 
 # Dependencies
 
+On Ubuntu Focal:
+
 ```
-$ sudo apt-get install python-ledger python-jinja2
+$ sudo add-apt-repository ppa:yurivkhan/ledger
+$ sudo apt update
+$ sudo apt install python3-ledger python3-jinja2
 ```
 
-Windows and Mac users please figure out the environment for yourselves.
+(In future, as soon as Ubuntu pulls in Ledger 3.2.0,
+the PPA will become unnecessary.)
+
+On Windows, Mac, and GNU/Linux other than Ubuntu,
+please figure out the environment for yourselves.
+You need Python 3,
+Ledger bindings for Python,
+and Jinja 2.
 
 # Examples
 
