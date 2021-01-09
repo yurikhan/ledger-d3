@@ -45,7 +45,7 @@ def amount_sum(date, base_commodity, amounts):
     for amount in amounts:
         value = amount.value(base_commodity, date)
         result = value if result is None else result + value
-    return result.to_double()
+    return result.to_double() if result is not None else 0
 
 
 def main():
