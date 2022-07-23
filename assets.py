@@ -65,7 +65,7 @@ def main():
                        key=lambda p: p.xact.date):
         date = post.xact.date
         account = post.account.fullname()
-        commodity = post.amount.commodity.symbol
+        commodity = post.amount.commodity.symbol.strip('"')
         amount = post.amount.to_double()
 
         if date != last_date:
