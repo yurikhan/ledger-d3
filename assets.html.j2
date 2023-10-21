@@ -34,6 +34,9 @@
             }{% if not loop.last %},{% endif %}
             {%- endfor %}
         ];
+        var miny = d3.min(data, function(d) {
+            return d3.sum(keys, function(k) { return d[k]; });
+        });
         var maxy = d3.max(data, function(d) {
             return d3.sum(keys, function(k) { return d[k]; });
         });
@@ -50,7 +53,7 @@
                   .domain(d3.extent(data, function(d) { return d.date; }))
                   .range([0, width]),
             y = d3.scaleLinear()
-                  .domain([0, maxy])
+                  .domain([-miny, maxy])
                   .range([height, 0]),
             strokeColor = d3.scaleOrdinal(d3.schemeCategory10)
                             .domain(keys);
@@ -95,12 +98,14 @@
 
         g.append("g")
          .attr("class", "axis axis--x")
-         .attr("transform", "translate(0," + height + ")")
+         .attr("transform", "translate(0," + y(0) + ")")
          .call(d3.axisBottom(x)
                  .ticks(d3.timeMonth.every(1))
                  .tickSizeInner(-height)
                  .tickSizeOuter(0)
-                 .tickPadding(10));
+                 .tickPadding(10))
+         .selectAll(".tick line")
+         .attr("transform", "translate(0," + (height - y(0)) + ")");
 
         g.append("g")
          .attr("class", "axis axis--y")
@@ -142,7 +147,7 @@
                  ii = x0 - d0.date > d1.date - x0 ? i : i - 1,
                  sumy = d3.sum(keys, function(k) { return d[k]; });
              tracker.attr("transform", "translate(" + x(d.date) + ",0)");
-             trackerLine.attr("y1", y(0))
+             trackerLine.attr("y1", y(-miny))
                         .attr("y2", y(maxy));
              tracker.selectAll("circle")
                     .data(stacked)
